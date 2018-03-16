@@ -5,6 +5,12 @@ cd build
 
 BUILD_CONFIG=Release
 
+declare -a CMAKE_PLATFORM_FLAGS
+if [[ ${HOST} =~ .*linux.* ]]; then
+    CMAKE_PLATFORM_FLAGS+=(-DCMAKE_FIND_ROOT_PATH="${PREFIX};${BUILD_PREFIX}/${HOST}/sysroot" \
+        -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH="${BUILD_PREFIX}/${HOST}/sysroot/usr/include")
+fi
+
 # choose different screen settings for OS X and Linux
 if [ `uname` = "Darwin" ]; then
     SCREEN_ARGS=(
@@ -55,7 +61,7 @@ cmake .. -G "Ninja" \
     -DVTK_USE_SYSTEM_HDF5:BOOL=ON \
     -DVTK_USE_SYSTEM_JSONCPP:BOOL=ON \
     -DVTK_SMP_IMPLEMENTATION_TYPE:STRING=TBB \
-    ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]}
+    ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]} ${CMAKE_PLATFORM_FLAGS[@]}
 
 # compile & install!
-ninja install
+ninja install -j ${CPU_COUNT}
