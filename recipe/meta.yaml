@@ -24,9 +24,6 @@ build:
   features:
 {% if with_osmesa == "True" %}
     - mesalib
-{% endif %}
-  skip: True  # [osx]
-{% if with_osmesa == "True" %}
   skip: True  # [win]
 {% endif %}
 
