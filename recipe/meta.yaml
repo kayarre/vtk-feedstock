@@ -13,6 +13,8 @@ source:
   url: http://www.vtk.org/files/release/{{ minor_version }}/VTK-{{ version }}.tar.gz
   fn:  VTK-{{ version }}.tar.gz
   sha256: 71a09b4340f0a9c58559fe946dc745ab68a866cf20636a41d97b6046cb736324
+  patches:
+    - 0001-Link-libpython-optionally-make-vtkPython-dep-compile.patch
 
 build:
   skip: True  # [win and vc<14]
