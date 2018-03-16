@@ -5,6 +5,12 @@ cd build
 
 BUILD_CONFIG=Release
 
+declare -a CMAKE_PLATFORM_FLAGS
+if [[ ${HOST} =~ .*linux.* ]]; then
+    CMAKE_PLATFORM_FLAGS+=(-DCMAKE_FIND_ROOT_PATH="${PREFIX};${BUILD_PREFIX}/${HOST}/sysroot" \
+        -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH="${BUILD_PREFIX}/${HOST}/sysroot/usr/include")
+fi
+
 # choose different screen settings for OS X and Linux
 if [ `uname` = "Darwin" ]; then
     SCREEN_ARGS=(
@@ -59,10 +65,10 @@ cmake .. -G "Ninja" \
     -DVTK_USE_SYSTEM_NETCDF:BOOL=ON \
     -DVTK_USE_SYSTEM_LZ4:BOOL=ON \
     -DVTK_USE_SYSTEM_OGGTHEORA:BOOL=ON \
-    ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]}
+    ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]} ${CMAKE_PLATFORM_FLAGS[@]}
 
 # compile & install!
-ninja install
+ninja install -j ${CPU_COUNT}
 
 # The egg-info file is necessary because some packages,
 # like mayavi, have a __requires__ in their __init__.py,
