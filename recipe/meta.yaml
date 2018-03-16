@@ -17,11 +17,9 @@ source:
   sha256: 6e269f07b64fb13774f5925161fb4e1f379f4e6a0131c8408c555f6b58ef3cb7
 
 build:
-  skip: True  # [win and py27]
+  skip: True  # [win and vc<14]
   number: {{ build_number }}
   features:
-    - vc14  # [win and py35]
-    - vc14  # [win and py36]
 {% if with_osmesa == "True" %}
     - mesalib
 {% endif %}
@@ -32,18 +30,29 @@ build:
 
 requirements:
   build:
-    - toolchain
     - cmake
     - ninja
+    - {{ compiler('cxx') }}
+  {% if SUBDIR in ('linux-64', 'linux-32') %}
+    - {{ cdt('libxcb') }}
+    - {{ cdt('libxau') }}
+    - {{ cdt('libsm-devel') }}
+    - {{ cdt('libxt-devel') }}
+    - {{ cdt('libice-devel') }}
+    - {{ cdt('libx11-devel') }}
+    - {{ cdt('mesa-libgl-devel') }}
+    - {{ cdt('xorg-x11-proto-devel') }}
+  {% endif %}
+  host:
     - python
     # VTK Third Party dependencies
-    - zlib 1.2.*
-    - freetype 2.8.*
-    - hdf5 1.8.18|1.8.18.*  # [unix]
-    - libxml2 2.9.*
-    - libpng >=1.6.23,<1.7
-    - jpeg 9*
-    - libtiff 4.0.*
+    - zlib
+    - freetype
+    - hdf5     # [unix]
+    - libxml2
+    - libpng
+    - jpeg
+    - libtiff
     - jsoncpp  # [unix]
     - expat
     - tbb
@@ -54,16 +63,9 @@ requirements:
     - python
     - future  # used in the generated python wrappers
     # VTK Third Party dependencies
-    - zlib 1.2.*
-    - freetype 2.8.*
-    - hdf5 1.8.18|1.8.18.*  # [unix]
-    - libxml2 2.9.*
-    - libpng >=1.6.23,<1.7
-    - jpeg 9*
-    - libtiff 4.0.*
     - jsoncpp  # [unix]
-    - expat
     - tbb
+    # Rest will be taken care of by run_exports
 {% if with_osmesa == "True" %}
     - mesalib
 {% endif %}
