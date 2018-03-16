@@ -15,7 +15,7 @@ source:
   sha256: 71a09b4340f0a9c58559fe946dc745ab68a866cf20636a41d97b6046cb736324
 
 build:
-  skip: True  # [win and py27]
+  skip: True  # [win and vc<14]
   number: {{ build_number }}
   features:
     - mesalib   # [VTK_WITH_OSMESA]
@@ -25,12 +25,28 @@ requirements:
     - {{ compiler("cxx") }}
     - cmake
     - ninja
+
+requirements:
+  build:
+    - cmake
+    - ninja
+    - {{ compiler('cxx') }}
+  {% if SUBDIR in ('linux-64', 'linux-32') %}
+    - {{ cdt('libxcb') }}
+    - {{ cdt('libxau') }}
+    - {{ cdt('libsm-devel') }}
+    - {{ cdt('libxt-devel') }}
+    - {{ cdt('libice-devel') }}
+    - {{ cdt('libx11-devel') }}
+    - {{ cdt('mesa-libgl-devel') }}
+    - {{ cdt('xorg-x11-proto-devel') }}
+  {% endif %}
   host:
     - python
     # VTK Third Party dependencies
     - zlib
     - freetype
-    - hdf5 1.10.1
+    - hdf5     # [unix]
     - libxml2
     - libpng
     - jpeg
@@ -49,22 +65,10 @@ requirements:
     - python
     - future  # used in the generated python wrappers
     # VTK Third Party dependencies
-    - zlib
-    - freetype
-    - hdf5 1.10.1
-    - libxml2
-    - libpng
-    - jpeg
-    - libtiff
-    - jsoncpp
-    - expat
-    - tbb
     - mesalib   # [VTK_WITH_OSMESA]
-    - libnetcdf
-    - lz4-c
-    - libogg      # [unix]
-    - libtheora   # [unix]
-    - xorg-libxt  # [linux]
+    - jsoncpp
+    - tbb
+    # Rest will be taken care of by run_exports
 
 test:
   imports:
