@@ -6,36 +6,24 @@ cd build
 BUILD_CONFIG=Release
 
 declare -a CMAKE_PLATFORM_FLAGS
-if [[ ${HOST} =~ .*linux.* ]]; then
-    CMAKE_PLATFORM_FLAGS+=(-DCMAKE_FIND_ROOT_PATH="${PREFIX};${BUILD_PREFIX}/${HOST}/sysroot" \
-        -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH="${BUILD_PREFIX}/${HOST}/sysroot/usr/include")
+if [[ ${target_platform} =~ .*linux.* ]]; then
+  CMAKE_PLATFORM_FLAGS+=(-DCMAKE_FIND_ROOT_PATH="${PREFIX};${BUILD_PREFIX}/${HOST}/sysroot")
+  CMAKE_PLATFORM_FLAGS+=(-DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH="${BUILD_PREFIX}/${HOST}/sysroot/usr/include")
+  CMAKE_PLATFORM_FLAGS+=(-DVTK_USE_X:BOOL=ON)
+elif [[ ${target_platform} == osx-64 ]]; then
+  CMAKE_PLATFORM_FLAGS+=(-DVTK_USE_X:BOOL=OFF)
+  CMAKE_PLATFORM_FLAGS+=(-DVTK_USE_COCOA:BOOL=ON)
+  CMAKE_PLATFORM_FLAGS+=(-DVTK_USE_CARBON:BOOL=OFF)
 fi
 
-# choose different screen settings for OS X and Linux
-if [ `uname` = "Darwin" ]; then
-    SCREEN_ARGS=(
-        "-DVTK_USE_X:BOOL=OFF"
-        "-DVTK_USE_COCOA:BOOL=ON"
-        "-DVTK_USE_CARBON:BOOL=OFF"
-    )
-else
-    SCREEN_ARGS=(
-        "-DVTK_USE_X:BOOL=ON"
-    )
-fi
-
-if [ -f '$PREFIX/lib/libOSMesa32.so' ]; then
-    WITH_OSMESA=(
-        "-DVTK_OPENGL_HAS_OSMESA:BOOL=ON"
-        "-DOSMESA_LIBRARY=${PREFIX}/lib/libOSMesa32.so"
-    )
-else
-    WITH_OSMESA=()
+declare -a WITH_OSMESA
+if [[ -f "${PREFIX}"/lib/libOSMesa32.so ]]; then
+  WITH_OSMESA+=(-DVTK_OPENGL_HAS_OSMESA:BOOL=ON)
+  WITH_OSMESA+=(-DOSMESA_LIBRARY="${PREFIX}/lib/libOSMesa32.so")
 fi
 
 # now we can start configuring
 cmake .. -G "Ninja" \
-    -Wno-dev \
     -DCMAKE_BUILD_TYPE=$BUILD_CONFIG \
     -DCMAKE_PREFIX_PATH:PATH="${PREFIX}" \
     -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" \
@@ -65,7 +53,9 @@ cmake .. -G "Ninja" \
     -DVTK_USE_SYSTEM_NETCDF:BOOL=ON \
     -DVTK_USE_SYSTEM_LZ4:BOOL=ON \
     -DVTK_USE_SYSTEM_OGGTHEORA:BOOL=ON \
-    ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]} ${CMAKE_PLATFORM_FLAGS[@]}
+    "${SCREEN_ARGS[@]}" \
+    "${CMAKE_PLATFORM_FLAGS[@]}" \
+    "${WITH_OSMESA[@]}"
 
 # compile & install!
 ninja install -j ${CPU_COUNT}
