@@ -1,8 +1,5 @@
 #!/bin/bash
 
-mkdir build
-cd build
-
 BUILD_CONFIG=Release
 
 declare -a CMAKE_PLATFORM_FLAGS
@@ -23,7 +20,7 @@ if [[ -f "${PREFIX}"/lib/libOSMesa32.so ]]; then
 fi
 
 # now we can start configuring
-cmake .. -G "Ninja" \
+cmake -H. -Bbuild -G"Ninja" \
     -DCMAKE_BUILD_TYPE=$BUILD_CONFIG \
     -DCMAKE_PREFIX_PATH:PATH="${PREFIX}" \
     -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" \
@@ -58,7 +55,8 @@ cmake .. -G "Ninja" \
     "${WITH_OSMESA[@]}"
 
 # compile & install!
-ninja install -j ${CPU_COUNT}
+cmake --build build/ -- -j${CPU_COUNT}
+cmake --build build/ -- install
 
 # The egg-info file is necessary because some packages,
 # like mayavi, have a __requires__ in their __init__.py,

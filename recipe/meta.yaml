@@ -15,6 +15,7 @@ source:
   sha256: 71a09b4340f0a9c58559fe946dc745ab68a866cf20636a41d97b6046cb736324
   patches:
     - 0001-Link-libpython-optionally-make-vtkPython-dep-compile.patch
+    - 0002-VTKGenerateExportHeader-Prefer-dumpversion-over-vers.patch
 
 build:
   skip: True  # [win and vc<14]
@@ -33,14 +34,22 @@ requirements:
     - cmake
     - ninja
     - {{ compiler('cxx') }}
-  {% if SUBDIR in ('linux-64', 'linux-32') %}
+      {% if SUBDIR in ('linux-64', 'linux-32', 'linux-ppc64le') %}
     - {{ cdt('libxcb') }}
     - {{ cdt('libxau') }}
+    - {{ cdt('libxau') }}
+    - {{ cdt('libuuid') }}
+    - {{ cdt('libxext') }}
+    - {{ cdt('libxfixes') }}
+    - {{ cdt('libxxf86vm') }}
+    - {{ cdt('libxdamage') }}
+    - {{ cdt('libselinux') }}
     - {{ cdt('libsm-devel') }}
     - {{ cdt('libxt-devel') }}
     - {{ cdt('libice-devel') }}
     - {{ cdt('libx11-devel') }}
     - {{ cdt('mesa-libgl-devel') }}
+    - {{ cdt('mesa-dri-drivers') }}
     - {{ cdt('xorg-x11-proto-devel') }}
   {% endif %}
   host:
@@ -62,7 +71,6 @@ requirements:
     - lz4-c
     - libogg      # [unix]
     - libtheora   # [unix]
-    - xorg-libxt  # [linux]
   run:
     - python
     - future  # used in the generated python wrappers
@@ -70,6 +78,7 @@ requirements:
     - mesalib   # [VTK_WITH_OSMESA]
     - jsoncpp
     - tbb
+    - {{ pin_compatible('libogg') }}  # [unix]
     # Rest will be taken care of by run_exports
 
 test:
