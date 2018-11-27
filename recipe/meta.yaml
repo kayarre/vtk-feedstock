@@ -15,8 +15,8 @@ source:
   fn:  VTK-{{ version }}.tar.gz
   sha256: 8ac6ef780eef170d572bae13fe2e4d40ffe453a4986391e528390e8a325c7674
   patches:
-    - 0001-Link-libpython-optionally-make-vtkPython-dep-compile.patch
-    - 0002-VTKGenerateExportHeader-Prefer-dumpversion-over-vers.patch
+    #- 0001-Link-libpython-optionally-make-vtkPython-dep-compile.patch
+    #- 0002-VTKGenerateExportHeader-Prefer-dumpversion-over-vers.patch
 
 build:
   skip: True  # [win and vc<14]
