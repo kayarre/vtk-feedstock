@@ -1,5 +1,6 @@
-{% set version = "8.1.1" %}
-{% set build_number = 4 %}
+{% set version = "8.2.0" %}
+{% set build_number = 0 %}
+{% set release_candidate = ".rc2" %}
 
 {% set minor_version = ".".join(version.split(".")[:2]) %}
 
@@ -10,9 +11,9 @@ package:
   version: {{ version }}
 
 source:
-  url: http://www.vtk.org/files/release/{{ minor_version }}/VTK-{{ version }}.tar.gz
+  url: http://www.vtk.org/files/release/{{ minor_version }}/VTK-{{ version }}{{release_candidate}}.tar.gz
   fn:  VTK-{{ version }}.tar.gz
-  sha256: 71a09b4340f0a9c58559fe946dc745ab68a866cf20636a41d97b6046cb736324
+  sha256: 8ac6ef780eef170d572bae13fe2e4d40ffe453a4986391e528390e8a325c7674
   patches:
     - 0001-Link-libpython-optionally-make-vtkPython-dep-compile.patch
     - 0002-VTKGenerateExportHeader-Prefer-dumpversion-over-vers.patch
