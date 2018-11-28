@@ -59,6 +59,7 @@ cmake .. -G "Ninja" \
     -DVTK_USE_SYSTEM_NETCDF:BOOL=ON \
     -DVTK_USE_SYSTEM_LZ4:BOOL=ON \
     -DVTK_USE_SYSTEM_OGGTHEORA:BOOL=ON \
+    -DVTK_LEGACY_REMOVE:BOOL=ON \
     ${SCREEN_ARGS[@]} ${WITH_OSMESA[@]}
 
 # compile & install!
