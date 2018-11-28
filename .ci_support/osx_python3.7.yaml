@@ -15,11 +15,11 @@ freetype:
 jpeg:
 - '9'
 jsoncpp:
-- 1.8.1
+- 1.8.4
 libnetcdf:
 - '4.6'
 libpng:
-- 1.6.34
+- 1.6.35
 libtiff:
 - 4.0.9
 libxml2:
@@ -57,8 +57,8 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- '3.6'
+- '3.7:'
 vtk:
-- 8.1.1
+- 8.2.0
 zlib:
 - '1.2'
