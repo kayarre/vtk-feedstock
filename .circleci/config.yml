@@ -213,8 +213,8 @@ workflows:
       #- build_linux_VTK_WITH_OSMESATruepython2.7
       #- build_linux_VTK_WITH_OSMESATruepython3.5
       #- build_linux_VTK_WITH_OSMESATruepython3.6
-      - build_linux_VTK_WITH_OSMESATruepython3.7
+      #- build_linux_VTK_WITH_OSMESATruepython3.7
       #- build_osx_python2.7
       #- build_osx_python3.5
       #- build_osx_python3.6
-      - build_osx_python3.7
+      #- build_osx_python3.7
