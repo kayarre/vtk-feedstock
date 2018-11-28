@@ -24,7 +24,7 @@ libtiff:
 - 4.0.9
 libxml2:
 - '2.9'
-lz4-c:
+lz4_c:
 - 1.8.3
 macos_machine:
 - x86_64-apple-darwin13.4.0
