@@ -22,8 +22,8 @@ libtiff:
 - 4.0.9
 libxml2:
 - '2.9'
-lz4_c:
-- 1.8.1
+lz4-c:
+- 1.8.3
 pin_run_as_build:
   expat:
     max_pin: x.x
@@ -51,7 +51,7 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- '3.7'
+- '3.7.1'
 vtk:
 - 8.2.0
 zip_keys:
